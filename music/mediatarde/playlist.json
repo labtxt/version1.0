@@ -1,10 +1,10 @@
 {
   "tracks": [
     {
-      "file": "eyecontact.mp3",
-      "duration": 330
+      "file": "TU_ARCHIVO_AQUI.mp3",
+      "duration": 300
     }
   ],
-  "total_duration": 330,
+  "total_duration": 300,
   "total_tracks": 1
 }
