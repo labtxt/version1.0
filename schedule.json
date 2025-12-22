@@ -5,35 +5,35 @@
       "name": "madrugada",
       "start": "01:00",
       "end": "06:00",
-      "folder": "music/madrugada/",
+      "folder": "madrugada/",
       "displayName": "Madrugada txt"
     },
     {
       "name": "mañana",
       "start": "06:00",
       "end": "12:00",
-      "folder": "music/mañana/",
+      "folder": "mañana/",
       "displayName": "Telesoft"
     },
     {
       "name": "tarde",
       "start": "12:00",
       "end": "16:00",
-      "folder": "music/tarde/",
+      "folder": "tarde/",
       "displayName": "Radio 404"
     },
     {
       "name": "mediatarde",
       "start": "16:00",
       "end": "20:00",
-      "folder": "music/mediatarde/",
+      "folder": "mediatarde/",
       "displayName": "Floppy Disk"
     },
     {
       "name": "noche",
       "start": "20:00",
       "end": "01:00",
-      "folder": "music/noche/",
+      "folder": "noche/",
       "displayName": "Piratas Informaticos"
     }
   ],
