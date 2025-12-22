@@ -5,35 +5,35 @@
       "name": "madrugada",
       "start": "01:00",
       "end": "06:00",
-      "folder": "madrugada/",
+      "folder": "music/madrugada/",
       "displayName": "Madrugada txt"
     },
     {
       "name": "manana",
       "start": "06:00",
       "end": "12:00",
-      "folder": "manana/",
+      "folder": "music/manana/",
       "displayName": "Telesoft"
     },
     {
       "name": "tarde",
       "start": "12:00",
       "end": "16:00",
-      "folder": "tarde/",
+      "folder": "music/tarde/",
       "displayName": "Radio 404"
     },
     {
       "name": "mediatarde",
       "start": "16:00",
       "end": "20:00",
-      "folder": "mediatarde/",
+      "folder": "music/mediatarde/",
       "displayName": "Floppy Disk"
     },
     {
       "name": "noche",
       "start": "20:00",
       "end": "01:00",
-      "folder": "noche/",
+      "folder": "music/noche/",
       "displayName": "Piratas Informaticos"
     }
   ],
@@ -43,7 +43,7 @@
       "name": "viernes_20_22",
       "start": "20:00",
       "end": "22:00",
-      "folder": "especiales/viernes_20_22/",
+      "folder": "music/especiales/viernes_20_22/",
       "displayName": "Trasnoche Teletext"
     },
     {
@@ -51,7 +51,7 @@
       "name": "viernes_22_01",
       "start": "22:00",
       "end": "01:00",
-      "folder": "especiales/viernes_22_01/",
+      "folder": "music/especiales/viernes_22_01/",
       "displayName": "Trasnoche Teletext"
     },
     {
@@ -59,7 +59,7 @@
       "name": "sabado_20_22",
       "start": "20:00",
       "end": "22:00",
-      "folder": "especiales/sabado_20_22/",
+      "folder": "music/especiales/sabado_20_22/",
       "displayName": "Trasnoche Teletext"
     },
     {
@@ -67,7 +67,7 @@
       "name": "sabado_22_01",
       "start": "22:00",
       "end": "01:00",
-      "folder": "especiales/sabado_22_01/",
+      "folder": "music/especiales/sabado_22_01/",
       "displayName": "Trasnoche Teletext"
     }
   ]
