@@ -1,10 +1,7 @@
 {
   "tracks": [
     {
-      "file": "automatnematod.mp3",
-      "duration": 300
+      "file": "automatnematod.mp3"
     }
-  ],
-  "total_duration": 300,
-  "total_tracks": 1
+  ]
 }
