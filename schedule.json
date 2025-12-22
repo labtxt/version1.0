@@ -39,36 +39,35 @@
   ],
   "specialSchedules": [
     {
-      "days": [5],
-      "name": "viernes_20_22",
-      "start": "20:00",
-      "end": "22:00",
-      "folder": "music/especiales/viernes_20_22/",
-      "displayName": "Trasnoche Teletext"
+        "days": [5],
+        "name": "viernes_20_22",
+        "start": "20:00",
+        "end": "22:00",
+        "folder": "music/noche/",
+        "displayName": "Trasnoche Teletext"
     },
     {
-      "days": [5],
-      "name": "viernes_22_01",
-      "start": "22:00",
-      "end": "01:00",
-      "folder": "music/especiales/viernes_22_01/",
-      "displayName": "Trasnoche Teletext"
+        "days": [5],
+        "name": "viernes_22_01",
+        "start": "22:00",
+        "end": "01:00",
+        "folder": "music/noche/",
+        "displayName": "Trasnoche Teletext"
     },
     {
-      "days": [6],
-      "name": "sabado_20_22",
-      "start": "20:00",
-      "end": "22:00",
-      "folder": "music/especiales/sabado_20_22/",
-      "displayName": "Trasnoche Teletext"
+        "days": [6],
+        "name": "sabado_20_22",
+        "start": "20:00",
+        "end": "22:00",
+        "folder": "music/noche/",
+        "displayName": "Trasnoche Teletext"
     },
     {
-      "days": [6],
-      "name": "sabado_22_01",
-      "start": "22:00",
-      "end": "01:00",
-      "folder": "music/especiales/sabado_22_01/",
-      "displayName": "Trasnoche Teletext"
+        "days": [6],
+        "name": "sabado_22_01",
+        "start": "22:00",
+        "end": "01:00",
+        "folder": "music/noche/",
+        "displayName": "Trasnoche Teletext"
     }
-  ]
-}
+]
