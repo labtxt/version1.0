@@ -1,7 +1,10 @@
 {
   "tracks": [
     {
-      "file": "jazzcartel.mp3"
+      "file": "jazzcartel.mp3",
+      "duration": 300
     }
-  ]
+  ],
+  "total_duration": 300,
+  "total_tracks": 1
 }
