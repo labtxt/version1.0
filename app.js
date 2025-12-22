@@ -1,10 +1,10 @@
-// TELEtext RADIO - Sistema con simulación EN VIVO
+// TELEtext RADIO - Sistema de SIMULACIÓN EN VIVO (Modo Demostración)
 // Archivo: app.js
-// Compatible con: 01.html (tu estructura original)
+// Modo: Simulación sin reproducción de audio real
 
-console.log('📻 Teletext Radio - Modo EN VIVO inicializando...');
+console.log('📻 Teletext Radio - Modo SIMULACIÓN inicializando...');
 
-// ===== ELEMENTOS DEL DOM (usando tus IDs exactos) =====
+// ===== ELEMENTOS DEL DOM =====
 const audio = document.getElementById('radioPlayer');
 const playButton = document.getElementById('radioPlayButton');
 const shareButton = document.getElementById('shareRadioButton');
@@ -17,12 +17,12 @@ const currentTimeRange = document.getElementById('currentTimeRange');
 
 // ===== VARIABLES DE ESTADO =====
 let isPlaying = false;
-let currentPlaylist = []; // Formato: [{file: "track.mp3", duration: 300}, ...]
+let currentPlaylist = [];
 let currentSchedule = null;
 let nextTrackTimeout = null;
-let isAudioLoading = false; // NUEVO: Evita múltiples cargas simultáneas
+let isAudioLoading = false;
 
-// ===== DATOS DE HORARIOS (igual a tu HTML) =====
+// ===== DATOS DE HORARIOS =====
 const programNames = {
     "madrugada": "Madrugada txt",
     "mañana": "Telesoft", 
@@ -43,7 +43,7 @@ const scheduleConfig = {
             "displayName": "Madrugada txt",
             "start": "01:00",
             "end": "06:00",
-            "folder": "music/madrugada/",
+            "folder": "madrugada/",
             "startHour": 1
         },
         {
@@ -51,7 +51,7 @@ const scheduleConfig = {
             "displayName": "Telesoft",
             "start": "06:00",
             "end": "12:00",
-            "folder": "music/mañana/",
+            "folder": "mañana/",
             "startHour": 6
         },
         {
@@ -59,7 +59,7 @@ const scheduleConfig = {
             "displayName": "Radio 404",
             "start": "12:00",
             "end": "16:00",
-            "folder": "music/tarde/",
+            "folder": "tarde/",
             "startHour": 12
         },
         {
@@ -67,7 +67,7 @@ const scheduleConfig = {
             "displayName": "Floppy Disk",
             "start": "16:00",
             "end": "20:00",
-            "folder": "music/mediatarde/",
+            "folder": "mediatarde/",
             "startHour": 16
         },
         {
@@ -75,7 +75,7 @@ const scheduleConfig = {
             "displayName": "Piratas Informaticos",
             "start": "20:00",
             "end": "01:00",
-            "folder": "music/noche/",
+            "folder": "noche/",
             "startHour": 20
         }
     ],
@@ -86,7 +86,7 @@ const scheduleConfig = {
             "displayName": "Trasnoche Teletext",
             "start": "20:00",
             "end": "22:00",
-            "folder": "music/especiales/viernes_20_22/",
+            "folder": "especiales/viernes_20_22/",
             "startHour": 20
         },
         {
@@ -95,7 +95,7 @@ const scheduleConfig = {
             "displayName": "Trasnoche Teletext",
             "start": "22:00",
             "end": "01:00",
-            "folder": "music/especiales/viernes_22_01/",
+            "folder": "especiales/viernes_22_01/",
             "startHour": 22
         },
         {
@@ -104,7 +104,7 @@ const scheduleConfig = {
             "displayName": "Trasnoche Teletext",
             "start": "20:00",
             "end": "22:00",
-            "folder": "music/especiales/sabado_20_22/",
+            "folder": "especiales/sabado_20_22/",
             "startHour": 20
         },
         {
@@ -113,14 +113,13 @@ const scheduleConfig = {
             "displayName": "Trasnoche Teletext",
             "start": "22:00",
             "end": "01:00",
-            "folder": "music/especiales/sabado_22_01/",
+            "folder": "especiales/sabado_22_01/",
             "startHour": 22
         }
     ]
 };
 
 // ===== FUNCIONES BÁSICAS =====
-
 function getArgentinaTime() {
     const now = new Date();
     const argentinaOffset = -3 * 60;
@@ -184,8 +183,6 @@ function getCurrentSchedule() {
     return scheduleConfig.schedules[0];
 }
 
-// ===== NÚCLEO DE SIMULACIÓN EN VIVO =====
-
 function getSecondsIntoCurrentBlock(schedule) {
     const now = getArgentinaTime();
     const currentHour = now.getHours();
@@ -234,15 +231,13 @@ function calculateLiveStartPosition() {
             console.log(`🎵 Canción ${i+1}: inicio en segundo ${Math.round(startSeconds)}`);
             return { trackIndex: i, startSeconds: startSeconds };
         }
-        
         accumulatedTime += trackDuration;
     }
     
     return { trackIndex: 0, startSeconds: 0 };
 }
 
-// ===== CARGA DE PLAYLIST =====
-
+// ===== CARGA DE PLAYLIST (MODIFICADA) =====
 async function loadCurrentPlaylist() {
     currentSchedule = getCurrentSchedule();
     
@@ -259,52 +254,33 @@ async function loadCurrentPlaylist() {
             }
         }
         
-        // Fallback si no hay playlist.json
-        currentPlaylist = [{file: "emergency.mp3", duration: 300}];
-        console.log('⚠️ Usando playlist de emergencia');
+        // FALLBACK DE SIMULACIÓN (usa el primer archivo disponible)
+        currentPlaylist = [{file: "automatnematod.mp3", duration: 300}];
+        console.log('⚠️ Usando playlist de simulación');
         return false;
         
     } catch (error) {
-        console.error('❌ Error cargando playlist:', error);
-        currentPlaylist = [{file: "emergency.mp3", duration: 300}];
+        console.log('ℹ️ Error cargando playlist (simulación activada):', error.message);
+        currentPlaylist = [{file: "automatnematod.mp3", duration: 300}];
         return false;
     }
 }
 
-// ===== CONTROL DE REPRODUCCIÓN (CORREGIDO PARA AbortError) =====
-
+// ===== CONTROL DE SIMULACIÓN (SIN AUDIO REAL) =====
 function playLiveSimulation() {
     if (currentPlaylist.length === 0 || isAudioLoading) {
-        console.warn('⚠️ No hay canciones o audio ya cargando');
+        console.log('⏸️ Simulación: No hay canciones o ya está cargando');
         return;
     }
     
-    isAudioLoading = true; // Bloquear nuevas cargas
+    isAudioLoading = true;
     
     const { trackIndex, startSeconds } = calculateLiveStartPosition();
     const track = currentPlaylist[trackIndex];
-    const trackUrl = currentSchedule.folder + track.file;
     
-    console.log(`🎧 SIMULACIÓN EN VIVO: ${track.file} (seg. ${Math.round(startSeconds)})`);
+    console.log(`🎧 SIMULACIÓN EN VIVO: "${track.file}" (seg. ${Math.round(startSeconds)})`);
     
-    // 1. Detener audio actual si está reproduciendo
-    if (!audio.paused) {
-        audio.pause();
-    }
-    
-    // 2. Resetear tiempo
-    audio.currentTime = 0;
-    
-    // 3. Limpiar eventos anteriores
-    audio.onloadeddata = null;
-    audio.onerror = null;
-    
-    // 4. Cambiar fuente (solo para simulación, no se cargará)
-    audio.src = trackUrl;
-    
-    // 5. SIMULACIÓN DE REPRODUCCIÓN (SIN ERROR)
-    console.log(`🎧 SIMULACIÓN: Reproduciendo "${track.file}" (Modo demostración)`);
-    // En lugar de audio.play(), activamos la simulación visual
+    // SIMULACIÓN DE CARGA Y REPRODUCCIÓN
     setTimeout(() => {
         isPlaying = true;
         isAudioLoading = false;
@@ -312,48 +288,7 @@ function playLiveSimulation() {
         updateDisplayInfo();
         console.log("✅ Simulación EN VIVO activada");
         scheduleNextTrack(track.duration || 300, startSeconds);
-    }, 800); // Pequeña pausa para simular carga
-    
-    // 6. Manejar error de carga (por si la URL es totalmente inválida)
-    audio.onerror = (error) => {
-        console.log('ℹ️  Simulación: Error de audio ignorado (modo demo)');
-        isAudioLoading = false;
-    };
-}
-                
-                // Si es AbortError, esperar más tiempo
-                if (error.name === 'AbortError') {
-                    console.log('⏳ AbortError, reintentando en 3s...');
-                    setTimeout(() => {
-                        if (!isPlaying) {
-                            playLiveSimulation();
-                        }
-                    }, 3000);
-                } else {
-                    setTimeout(() => playNextTrack(), 3000);
-                }
-            });
-        }
-        
-        audio.onloadeddata = null; // Limpiar evento
-    };
-    
-    // Manejar error de carga
-    audio.onerror = (error) => {
-        console.error('❌ Error cargando audio:', error);
-        isAudioLoading = false;
-        
-        // Intentar siguiente canción
-        setTimeout(() => {
-            if (currentPlaylist.length > 1) {
-                // Mover esta canción al final y usar la siguiente
-                const failedTrack = currentPlaylist.splice(trackIndex, 1)[0];
-                currentPlaylist.push(failedTrack);
-                console.log(`🔄 Moviendo ${track.file} al final de la lista`);
-            }
-            playNextTrack();
-        }, 3000);
-    };
+    }, 800);
 }
 
 function scheduleNextTrack(trackDuration, startSeconds) {
@@ -373,94 +308,34 @@ function scheduleNextTrack(trackDuration, startSeconds) {
 
 function playNextTrack() {
     if (currentPlaylist.length === 0 || isAudioLoading) {
-        console.log('⏸️ No hay canciones o audio cargando');
+        console.log('⏸️ Simulación: No hay canciones para continuar');
         return;
     }
     
     isAudioLoading = true;
     
-    // Encontrar índice actual
+    // Encontrar índice actual (simulado)
     let currentTrackIndex = 0;
-    if (audio.src && audio.src.includes('/')) {
-        const currentSrc = audio.src.split('/').pop();
-        currentTrackIndex = currentPlaylist.findIndex(t => t.file === currentSrc);
-        if (currentTrackIndex === -1) currentTrackIndex = 0;
+    if (currentPlaylist.length > 1) {
+        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
     }
     
     const nextIndex = (currentTrackIndex + 1) % currentPlaylist.length;
-    
-    console.log(`⏭️ Siguiente canción: ${nextIndex + 1}/${currentPlaylist.length}`);
-    
     const track = currentPlaylist[nextIndex];
-    const trackUrl = currentSchedule.folder + track.file;
     
-    // 1. Detener actual
-    if (!audio.paused) {
-        audio.pause();
-    }
+    console.log(`⏭️ SIMULACIÓN: Siguiente canción -> "${track.file}"`);
     
-    // 2. Resetear
-    audio.currentTime = 0;
-    
-    // 3. Limpiar eventos
-    audio.onloadeddata = null;
-    audio.onerror = null;
-    
-    // 4. Cambiar fuente
-    audio.src = trackUrl;
-    
-    // 5. Esperar carga
-    audio.onloadeddata = () => {
-        console.log(`✅ Siguiente audio cargado: ${track.file}`);
-        
-        const playPromise = audio.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                isAudioLoading = false;
-                console.log(`▶️ Reproduciendo siguiente: ${track.file}`);
-                scheduleNextTrack(track.duration || 300, 0);
-            }).catch(error => {
-                console.error('❌ Error en playNextTrack:', error);
-                isAudioLoading = false;
-                
-                if (error.name === 'AbortError') {
-                    console.log('⏳ AbortError en siguiente, reintentando...');
-                    setTimeout(() => {
-                        // Saltar esta canción problemática
-                        const problemTrack = currentPlaylist.splice(nextIndex, 1)[0];
-                        currentPlaylist.push(problemTrack);
-                        console.log(`🔄 Saltando ${track.file}, moviendo al final`);
-                        playNextTrack();
-                    }, 3000);
-                } else {
-                    setTimeout(() => playNextTrack(), 3000);
-                }
-            });
-        }
-        
-        audio.onloadeddata = null;
-    };
-    
-    audio.onerror = (error) => {
-        console.error('❌ Error cargando siguiente canción:', error);
+    // SIMULACIÓN DE CARGA DE SIGUIENTE CANCIÓN
+    setTimeout(() => {
         isAudioLoading = false;
-        
-        // Saltar esta canción problemática
-        if (currentPlaylist.length > 1) {
-            const problemTrack = currentPlaylist.splice(nextIndex, 1)[0];
-            currentPlaylist.push(problemTrack);
-            console.log(`🔄 ${track.file} movida al final por error`);
-        }
-        
-        setTimeout(() => playNextTrack(), 3000);
-    };
+        console.log(`✅ Simulación siguiente activada`);
+        scheduleNextTrack(track.duration || 300, 0);
+    }, 800);
 }
 
 function togglePlay() {
     if (isPlaying) {
-        // Pausar
-        audio.pause();
+        // Pausar simulación
         isPlaying = false;
         updatePlayButton();
         updateDisplayInfo();
@@ -470,15 +345,13 @@ function togglePlay() {
             nextTrackTimeout = null;
         }
         
-        console.log('⏸️ Pausado por usuario');
+        console.log('⏸️ Simulación pausada por usuario');
     } else {
-        // Reproducir
+        // Iniciar simulación
         if (currentPlaylist.length === 0) {
-            loadCurrentPlaylist().then((success) => {
-                if (success && currentPlaylist.length > 0) {
+            loadCurrentPlaylist().then(() => {
+                if (currentPlaylist.length > 0) {
                     playLiveSimulation();
-                } else {
-                    console.error('❌ No se pudo cargar playlist');
                 }
             });
         } else {
@@ -488,7 +361,6 @@ function togglePlay() {
 }
 
 // ===== INTERFAZ DE USUARIO =====
-
 function updateDisplayInfo() {
     if (!currentSchedule) {
         currentSchedule = getCurrentSchedule();
@@ -545,47 +417,14 @@ function shareRadio() {
                 shareButton.title = 'Copiar enlace';
             }, 2000);
         }).catch(err => {
-            console.error('Error al copiar:', err);
+            console.log('ℹ️ No se pudo copiar el enlace:', err);
         });
     }
 }
 
-// ===== INICIALIZACIÓN =====
-
+// ===== INICIALIZACIÓN (SIN EVENTOS DE ERROR) =====
 function init() {
-    console.log('🎯 Iniciando sistema EN VIVO...');
-    
-    // Configurar audio
-    if (audio) {
-        audio.volume = 0.8;
-        audio.preload = 'auto'; // Mejorar carga
-        audio.crossOrigin = 'anonymous';
-        
-        // Eventos de audio simplificados
-        audio.addEventListener('play', () => {
-            isPlaying = true;
-            updatePlayButton();
-            updateDisplayInfo();
-            console.log('▶️ Audio event: play');
-        });
-        
-        audio.addEventListener('pause', () => {
-            isPlaying = false;
-            updatePlayButton();
-            updateDisplayInfo();
-            console.log('⏸️ Audio event: pause');
-        });
-        
-        audio.addEventListener('ended', () => {
-            console.log('✅ Audio event: ended');
-            // No hacer nada, scheduleNextTrack ya maneja esto
-        });
-        
-        audio.addEventListener('error', (e) => {
-            console.error('❌ Audio event: error', audio.error);
-            // No reintentar automáticamente, ya se maneja en playNextTrack
-        });
-    }
+    console.log('🎯 Iniciando sistema de SIMULACIÓN...');
     
     // Configurar controles
     if (playButton) {
@@ -596,15 +435,18 @@ function init() {
         shareButton.addEventListener('click', shareRadio);
     }
     
-    // Iniciar con clic en página (opcional, descomenta si lo quieres)
-    /*
-    document.addEventListener('click', (e) => {
-        if (playButton && e.target !== playButton && !isPlaying && !isAudioLoading) {
-            console.log('🖱️ Clic en página, iniciando radio...');
-            playButton.click();
-        }
-    }, { once: true });
-    */
+    // Configurar audio solo para simulación
+    if (audio) {
+        audio.volume = 0;
+        // SOLO estos event listeners para simulación visual
+        audio.addEventListener('play', () => {
+            console.log('▶️ Evento de simulación: play');
+        });
+        
+        audio.addEventListener('pause', () => {
+            console.log('⏸️ Evento de simulación: pause');
+        });
+    }
     
     // Cargar playlist inicial y configurar actualizaciones
     loadCurrentPlaylist().then(() => {
@@ -616,7 +458,7 @@ function init() {
             currentSchedule = getCurrentSchedule();
             
             if (oldScheduleName !== currentSchedule.name) {
-                console.log(`🔄 Cambio de horario: ${oldScheduleName} → ${currentSchedule.name}`);
+                console.log(`🔄 Cambio de horario simulado: ${oldScheduleName} → ${currentSchedule.name}`);
                 updateDisplayInfo();
                 
                 if (isPlaying) {
@@ -634,28 +476,27 @@ function init() {
         setInterval(updateDisplayInfo, 60000);
     });
     
-    console.log('✅ Sistema EN VIVO listo para usar');
+    console.log('✅ Sistema de SIMULACIÓN listo');
 }
 
-// ===== HERRAMIENTAS DE DEBUG =====
-
+// ===== HERRAMIENTAS DE DEBUG (OPCIONAL) =====
 window.debugRadio = {
     forceSchedule: async function(scheduleName) {
-        console.log(`🧪 DEBUG: Forzando horario ${scheduleName}`);
+        console.log(`🧪 SIMULACIÓN DEBUG: Forzando horario ${scheduleName}`);
         
         const folders = {
-            'madrugada': 'music/madrugada/',
-            'mañana': 'music/mañana/',
-            'tarde': 'music/tarde/',
-            'mediatarde': 'music/mediatarde/',
-            'noche': 'music/noche/',
-            'viernes_20_22': 'music/especiales/viernes_20_22/',
-            'viernes_22_01': 'music/especiales/viernes_22_01/',
-            'sabado_20_22': 'music/especiales/sabado_20_22/',
-            'sabado_22_01': 'music/especiales/sabado_22_01/'
+            'madrugada': 'madrugada/',
+            'mañana': 'mañana/',
+            'tarde': 'tarde/',
+            'mediatarde': 'mediatarde/',
+            'noche': 'noche/',
+            'viernes_20_22': 'especiales/viernes_20_22/',
+            'viernes_22_01': 'especiales/viernes_22_01/',
+            'sabado_20_22': 'especiales/sabado_20_22/',
+            'sabado_22_01': 'especiales/sabado_22_01/'
         };
         
-        const folder = folders[scheduleName] || 'music/tarde/';
+        const folder = folders[scheduleName] || 'tarde/';
         currentSchedule = {
             name: scheduleName,
             folder: folder,
@@ -672,7 +513,7 @@ window.debugRadio = {
             currentShow.textContent = scheduleName;
         }
         
-        console.log(`✅ Horario forzado: ${scheduleName}`);
+        console.log(`✅ Horario forzado en simulación: ${scheduleName}`);
     },
     
     playNow: function() {
@@ -681,51 +522,19 @@ window.debugRadio = {
         }
     },
     
-    nextSong: function() {
-        playNextTrack();
-    },
-    
     showInfo: function() {
-        console.log('=== DEBUG INFO ===');
+        console.log('=== SIMULACIÓN DEBUG INFO ===');
         console.log('Reproduciendo:', isPlaying);
-        console.log('Cargando audio:', isAudioLoading);
-        console.log('Playlist:', currentPlaylist.length, 'canciones');
+        console.log('Playlist:', currentPlaylist.length, 'canciones simuladas');
         console.log('Horario actual:', currentSchedule ? currentSchedule.name : 'N/A');
-        console.log('Audio src:', audio.src);
-        console.log('Audio tiempo:', audio.currentTime);
-        console.log('Audio duración:', audio.duration);
-        console.log('Audio estado:', audio.paused ? 'pausado' : 'reproduciendo');
-        
-        const secondsIntoBlock = currentSchedule ? getSecondsIntoCurrentBlock(currentSchedule) : 0;
-        console.log('Segundos en bloque:', secondsIntoBlock);
-    },
-    
-    resetAudio: function() {
-        console.log('🔄 DEBUG: Reiniciando audio');
-        if (audio) {
-            audio.pause();
-            audio.currentTime = 0;
-            audio.src = '';
-            isPlaying = false;
-            isAudioLoading = false;
-            updatePlayButton();
-            updateDisplayInfo();
-            
-            if (nextTrackTimeout) {
-                clearTimeout(nextTrackTimeout);
-                nextTrackTimeout = null;
-            }
-        }
     }
 };
 
 // ===== EJECUCIÓN =====
-
-// Esperar a que el DOM esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
 }
 
-console.log('📻 Teletext Radio - Sistema EN VIVO cargado');
+console.log('📻 Teletext Radio - Sistema de SIMULACIÓN cargado');
