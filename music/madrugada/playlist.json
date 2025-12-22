@@ -1,10 +1,7 @@
 {
   "tracks": [
     {
-      "file": "itsyoutlove.mp3",
-      "duration": 300
+      "file": "itsyoutlove.mp3"
     }
-  ],
-  "total_duration": 300,
-  "total_tracks": 1
+  ]
 }
