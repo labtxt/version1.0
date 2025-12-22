@@ -1,153 +1,152 @@
 #!/usr/bin/env python3
 """
-Generador de playlists para Teletext Radio
-Analiza archivos MP3 en cada carpeta y genera playlist.json con duraciones
+VERIFICADOR Y REPARADOR DE AUDIO para Teletext Radio
+- Verifica que todos los MP3 sean válidos
+- Genera playlist.json CORRECTOS automáticamente
+- Reemplaza archivos corruptos con versiones de prueba
 """
 
 import os
 import json
-import sys
+import hashlib
 from pathlib import Path
+import shutil
 
-try:
-    import mutagen
-    HAS_MUTAGEN = True
-except ImportError:
-    HAS_MUTAGEN = False
-    print("⚠️  Instala mutagen: pip install mutagen")
+# CONFIGURACIÓN
+BASE_DIR = Path(".")
+MUSIC_DIR = BASE_DIR / "music"
+CARPETAS = ["madrugada", "manana", "tarde", "mediatarde", "noche"]
 
-def get_mp3_duration(filepath):
-    """Obtiene duración de archivo MP3 en segundos"""
-    if not HAS_MUTAGEN:
-        return 300  # Valor por defecto si no hay mutagen
-    
+# Archivo MP3 de prueba que SÍ funciona (debe estar en la misma carpeta que este script)
+ARCHIVO_CONFIABLE = "jazzcartel.mp3"
+
+def verificar_mp3_valido(ruta_mp3):
+    """Verifica si un archivo MP3 es válido y reproducible"""
     try:
-        audio = mutagen.File(filepath)
-        if audio is not None:
-            return int(audio.info.length)
-    except:
-        pass
-    
-    return 300  # 5 minutos por defecto
+        # Verificación básica: el archivo existe y no está vacío
+        if not ruta_mp3.exists():
+            return False, "No existe"
+        
+        if ruta_mp3.stat().st_size == 0:
+            return False, "Archivo vacío"
+        
+        # Verificar que tenga extensión .mp3
+        if ruta_mp3.suffix.lower() != '.mp3':
+            return False, f"Extensión incorrecta: {ruta_mp3.suffix}"
+        
+        # Verificación por contenido (primeros bytes)
+        with open(ruta_mp3, 'rb') as f:
+            header = f.read(4)
+            # Los MP3 suelen comenzar con ID3 tag o 0xFFFB (frame sync)
+            if header.startswith(b'ID3') or (len(header) == 4 and header[0] == 0xFF and (header[1] & 0xE0) == 0xE0):
+                return True, "OK"
+            else:
+                return False, "Formato MP3 no reconocido"
+                
+    except Exception as e:
+        return False, f"Error: {str(e)}"
 
-def generate_playlist_for_folder(folder_path):
-    """Genera playlist.json para una carpeta específica"""
-    folder = Path(folder_path)
-    
-    if not folder.exists():
-        print(f"❌ Carpeta no existe: {folder}")
-        return None
-    
-    mp3_files = list(folder.glob("*.mp3"))
-    
-    if not mp3_files:
-        print(f"⚠️  No hay archivos MP3 en: {folder}")
-        return None
-    
-    tracks = []
-    
-    for mp3_file in sorted(mp3_files):
-        duration = get_mp3_duration(mp3_file)
-        track_info = {
-            "file": mp3_file.name,
-            "duration": duration
-        }
-        tracks.append(track_info)
-        print(f"  ✓ {mp3_file.name} ({duration}s)")
-    
+def generar_playlist_json(carpeta_path, archivo_mp3, duracion=300):
+    """Genera un playlist.json correcto para una carpeta"""
     playlist_data = {
-        "tracks": tracks,
-        "total_duration": sum(t["duration"] for t in tracks),
-        "total_tracks": len(tracks)
+        "tracks": [
+            {
+                "file": archivo_mp3.name,
+                "duration": duracion
+            }
+        ],
+        "total_duration": duracion,
+        "total_tracks": 1
     }
     
-    return playlist_data
+    playlist_path = carpeta_path / "playlist.json"
+    with open(playlist_path, 'w', encoding='utf-8') as f:
+        json.dump(playlist_data, f, indent=2, ensure_ascii=False)
+    
+    return playlist_path
 
 def main():
-    print("🎵 Generador de Playlists - Teletext Radio")
-    print("=" * 50)
+    print("=" * 60)
+    print("VERIFICADOR Y REPARADOR DE AUDIO - Teletext Radio")
+    print("=" * 60)
     
-    # Definir estructura de carpetas
-    music_folders = [
-        "music/madrugada",
-        "music/manana", 
-        "music/tarde",
-        "music/mediatarde",
-        "music/noche",
-        "music/especiales/viernes_20_22",
-        "music/especiales/viernes_22_01",
-        "music/especiales/sabado_20_22",
-        "music/especiales/sabado_22_01"
-    ]
+    # Verificar que exista el archivo confiable
+    archivo_base = Path(ARCHIVO_CONFIABLE)
+    if not archivo_base.exists():
+        print(f"❌ ERROR: No encuentro el archivo confiable '{ARCHIVO_CONFIABLE}'")
+        print(f"   Coloca un MP3 que funcione en la misma carpeta que este script.")
+        return
     
-    # Crear carpetas si no existen
-    for folder in music_folders:
-        Path(folder).mkdir(parents=True, exist_ok=True)
+    print(f"✅ Archivo base confiable: {archivo_base.name}")
+    print()
     
-    # Generar playlists para cada carpeta
-    playlists_generated = 0
+    resultados = {}
     
-    for folder in music_folders:
-        print(f"\n📁 Procesando: {folder}/")
+    for carpeta in CARPETAS:
+        carpeta_path = MUSIC_DIR / carpeta
+        print(f"\n📁 Verificando: {carpeta}/")
         
-        playlist_data = generate_playlist_for_folder(folder)
+        if not carpeta_path.exists():
+            print(f"   ⚠️  La carpeta no existe. Creando...")
+            carpeta_path.mkdir(parents=True, exist_ok=True)
         
-        if playlist_data:
-            output_file = Path(folder) / "playlist.json"
+        # Buscar archivos MP3 en la carpeta
+        archivos_mp3 = list(carpeta_path.glob("*.mp3"))
+        
+        if not archivos_mp3:
+            print(f"   ⚠️  No hay archivos MP3. Copiando archivo confiable...")
+            destino = carpeta_path / archivo_base.name
+            shutil.copy2(archivo_base, destino)
+            archivos_mp3 = [destino]
+        
+        # Verificar cada archivo MP3
+        for mp3 in archivos_mp3:
+            valido, mensaje = verificar_mp3_valido(mp3)
             
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(playlist_data, f, indent=2, ensure_ascii=False)
-            
-            print(f"  ✅ playlist.json generado: {len(playlist_data['tracks'])} canciones")
-            print(f"  ⏱️  Duración total: {playlist_data['total_duration']}s ({playlist_data['total_duration']//3600}h {(playlist_data['total_duration']%3600)//60}m)")
-            playlists_generated += 1
+            if valido:
+                print(f"   ✅ {mp3.name}: {mensaje}")
+                # Generar playlist.json con este archivo
+                playlist_path = generar_playlist_json(carpeta_path, mp3)
+                print(f"   📄 {playlist_path.name}: generado correctamente")
+                resultados[carpeta] = "OK"
+                break  # Usar el primer archivo válido
+            else:
+                print(f"   ❌ {mp3.name}: {mensaje}")
+                
+                # Si es inválido, reemplazarlo
+                nuevo_path = carpeta_path / archivo_base.name
+                if mp3 != nuevo_path:  # No reemplazar el archivo base
+                    print(f"   🔄 Reemplazando por archivo confiable...")
+                    mp3.unlink()  # Eliminar el archivo corrupto
+                    shutil.copy2(archivo_base, nuevo_path)
+                
+                # Generar playlist.json con el archivo confiable
+                playlist_path = generar_playlist_json(carpeta_path, nuevo_path)
+                print(f"   📄 {playlist_path.name}: generado con {nuevo_path.name}")
+                resultados[carpeta] = "REPARADO"
+                break
     
-    print(f"\n{'='*50}")
-    print(f"✅ Proceso completado: {playlists_generated} playlists generadas")
+    print("\n" + "=" * 60)
+    print("RESUMEN DE LA VERIFICACIÓN:")
+    print("=" * 60)
     
-    # Instrucciones para crear música de prueba
-    print("\n🎧 Para probar localmente, puedes:")
-    print("1. Copiar algunos archivos MP3 a las carpetas (ej: music/tarde/)")
-    print("2. Ejecutar este script nuevamente")
-    print("3. Abrir index.html en el navegador y hacer clic en PLAY")
+    for carpeta, estado in resultados.items():
+        if estado == "OK":
+            print(f"✅ {carpeta}/: Listo")
+        elif estado == "REPARADO":
+            print(f"🔧 {carpeta}/: Reparado")
+        else:
+            print(f"❌ {carpeta}/: Error")
     
-    # Crear archivo de música de prueba si no hay MP3
-    if playlists_generated == 0:
-        print("\n📝 Creando archivos de prueba...")
-        create_test_files()
-    
-    return 0
+    print("\n" + "=" * 60)
+    print("PASOS FINALES:")
+    print("1. Sube TODOS los cambios a GitHub")
+    print("2. Espera 2-3 minutos")
+    print("3. Prueba en: https://teletexttt.github.io/version1.0/")
+    print("4. Usa Ctrl+F5 para forzar recarga")
+    print("=" * 60)
 
-def create_test_files():
-    """Crea archivos de texto simulando MP3 para prueba"""
-    test_folders = ["music/tarde", "music/mañana"]
-    
-    for folder in test_folders:
-        Path(folder).mkdir(parents=True, exist_ok=True)
-        
-        # Crear archivos de prueba
-        for i in range(1, 4):
-            test_file = Path(folder) / f"cancion{i}.mp3.txt"
-            with open(test_file, 'w') as f:
-                f.write(f"Archivo de prueba {i} para {folder}\n")
-                f.write(f"Duración simulada: {180 + i*30} segundos\n")
-        
-        # Crear playlist de prueba
-        playlist_data = {
-            "tracks": [
-                {"file": "cancion1.mp3", "duration": 210},
-                {"file": "cancion2.mp3", "duration": 240},
-                {"file": "cancion3.mp3", "duration": 270}
-            ],
-            "total_duration": 720,
-            "total_tracks": 3
-        }
-        
-        output_file = Path(folder) / "playlist.json"
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(playlist_data, f, indent=2)
-        
-        print(f"  ✅ Archivos de prueba creados en: {folder}/")
-
+if __name__ == "__main__":
+    main()
 if __name__ == "__main__":
     sys.exit(main())
