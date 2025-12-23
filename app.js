@@ -248,37 +248,67 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Generar colecciones
-    function generateCollections() {
-        const collectionsGrid = document.querySelector('.collections-grid');
-        if (!collectionsGrid) return;
-        
-        const collections = [
-            { name: "Madrugada txt", tracks: 24, desc: "Selección atmosférica para las primeras horas" },
-            { name: "Telesoft", tracks: 32, desc: "Energía y ritmos para comenzar el día" },
-            { name: "Radio 404", tracks: 28, desc: "Ritmos variados característicos" },
-            { name: "Floppy Disk", tracks: 30, desc: "Transición hacia la noche con sonidos profundos" },
-            { name: "Piratas Informáticos", tracks: 35, desc: "Sesiones extendidas y atmósferas nocturnas" }
-        ];
-        
-        collectionsGrid.innerHTML = '';
-        collections.forEach(collection => {
-            const card = document.createElement('div');
-            card.className = 'collection-card';
-            card.innerHTML = `
-                <div class="collection-header">
-                    <div class="collection-name">${collection.name}</div>
-                    <div class="collection-meta">
-                        <span>${collection.tracks} tracks</span>
-                    </div>
-                </div>
-                <div class="collection-body">
-                    <div class="collection-desc">${collection.desc}</div>
-                </div>
-            `;
-            collectionsGrid.appendChild(card);
-        });
-    }
+    // Generar novedades (antes colecciones)
+function generateNovedades() {
+    const novedadesGrid = document.querySelector('.novedades-grid');
+    if (!novedadesGrid) return;
+    
+    const novedades = [
+        { 
+            name: "Lanzamiento txt", 
+            desc: "Nueva compilación de sonidos atmosféricos",
+            image: "images/novedad1.jpg", // Ajusta las rutas
+            date: "Dic 2024"
+        },
+        { 
+            name: "Radio 404 Live", 
+            desc: "Sesión en vivo desde el estudio principal",
+            image: "images/novedad2.jpg",
+            date: "Nov 2024"
+        },
+        { 
+            name: "Floppy Disk Vol.2", 
+            desc: "Segunda entrega de la serie digital",
+            image: "images/novedad3.jpg",
+            date: "Oct 2024"
+        },
+        { 
+            name: "Madrugada Sessions", 
+            desc: "Grabaciones exclusivas de 2AM a 6AM",
+            image: "images/novedad4.jpg",
+            date: "Sep 2024"
+        },
+        { 
+            name: "Telesoft Remixes", 
+            desc: "Reinterpretaciones del programa matutino",
+            image: "images/novedad5.jpg",
+            date: "Ago 2024"
+        },
+        { 
+            name: "Piratas Archive", 
+            desc: "Material de archivo restaurado digitalmente",
+            image: "images/novedad6.jpg",
+            date: "Jul 2024"
+        }
+    ];
+    
+    novedadesGrid.innerHTML = '';
+    novedades.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'novedad-card';
+        card.innerHTML = `
+            <div class="novedad-image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="novedad-content">
+                <div class="novedad-date">${item.date}</div>
+                <div class="novedad-name">${item.name}</div>
+                <div class="novedad-desc">${item.desc}</div>
+            </div>
+        `;
+        novedadesGrid.appendChild(card);
+    });
+}
     
     // Botón compartir
     const shareButton = document.getElementById('shareRadioButton');
@@ -312,3 +342,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log("📻 Teletext Radio cargado - Transmisión en vivo 24/7");
+
