@@ -257,37 +257,31 @@ function generateNovedades() {
         { 
             name: "Lanzamiento txt", 
             desc: "Nueva compilación de sonidos atmosféricos",
-            image: "images/novedad1.jpg", // Ajusta las rutas
             date: "Dic 2024"
         },
         { 
             name: "Radio 404 Live", 
             desc: "Sesión en vivo desde el estudio principal",
-            image: "images/novedad2.jpg",
             date: "Nov 2024"
         },
         { 
             name: "Floppy Disk Vol.2", 
             desc: "Segunda entrega de la serie digital",
-            image: "images/novedad3.jpg",
             date: "Oct 2024"
         },
         { 
             name: "Madrugada Sessions", 
             desc: "Grabaciones exclusivas de 2AM a 6AM",
-            image: "images/novedad4.jpg",
             date: "Sep 2024"
         },
         { 
             name: "Telesoft Remixes", 
             desc: "Reinterpretaciones del programa matutino",
-            image: "images/novedad5.jpg",
             date: "Ago 2024"
         },
         { 
             name: "Piratas Archive", 
             desc: "Material de archivo restaurado digitalmente",
-            image: "images/novedad6.jpg",
             date: "Jul 2024"
         }
     ];
@@ -297,18 +291,13 @@ function generateNovedades() {
         const card = document.createElement('div');
         card.className = 'novedad-card';
         card.innerHTML = `
-            <div class="novedad-image">
-                <img src="${item.image}" alt="${item.name}">
-            </div>
-            <div class="novedad-content">
-                <div class="novedad-date">${item.date}</div>
-                <div class="novedad-name">${item.name}</div>
-                <div class="novedad-desc">${item.desc}</div>
-            </div>
+            <div class="novedad-date">${item.date}</div>
+            <div class="novedad-name">${item.name}</div>
+            <div class="novedad-desc">${item.desc}</div>
         `;
         novedadesGrid.appendChild(card);
     });
-}
+}}
     
     // Botón compartir
     const shareButton = document.getElementById('shareRadioButton');
@@ -342,5 +331,6 @@ function generateNovedades() {
 });
 
 console.log("📻 Teletext Radio cargado - Transmisión en vivo 24/7");
+
 
 
