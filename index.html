@@ -676,11 +676,15 @@
             </div>
         </section>
 
-        <!-- COLLECTIONS -->
-        <section class="novedades-section">
-    <h2 class="section-title">Novedades <span>txt</span></h2>
-    <div class="novedades-grid"></div>
-         </section>
+        <!-- NOVEDADES -->
+        <section class="content-section">
+            <div class="collections-section">
+                <h2 class="section-title">NOVEDADES <span>TXT</span></h2>
+                <div class="collections-grid">
+                    <!-- Tarjetas generadas por JS -->
+                </div>
+            </div>
+        </section>
 
         <!-- INFO -->
         <section class="content-section" style="background: rgba(20, 20, 20, 0.92);">
@@ -706,7 +710,7 @@
                     <ul class="footer-links">
                         <li><a href="#now-playing">En Vivo</a></li>
                         <li><a href="#schedule">Programación</a></li>
-                        <li><a href="#collections">Colecciones</a></li>
+                        <li><a href="#collections">Novedades</a></li>
                     </ul>
                 </div>
                 
@@ -852,39 +856,6 @@
                 ]
             };
             
-            const collectionsData = [
-                {
-                    "name": "Madrugada txt",
-                    "folder": "madrugada",
-                    "tracks": 24,
-                    "description": "Selección atmosférica para las primeras horas del día."
-                },
-                {
-                    "name": "Telesoft",
-                    "folder": "mañana",
-                    "tracks": 32,
-                    "description": "Energía y ritmos para comenzar el día con buen pie."
-                },
-                {
-                    "name": "Radio 404",
-                    "folder": "tarde",
-                    "tracks": 28,
-                    "description": "Ritmos variados que caracterizan al programa Radio 404."
-                },
-                {
-                    "name": "Floppy Disk",
-                    "folder": "mediatarde",
-                    "tracks": 30,
-                    "description": "Transición hacia la noche con sonidos más profundos."
-                },
-                {
-                    "name": "Piratas Informáticos",
-                    "folder": "noche",
-                    "tracks": 35,
-                    "description": "Sesiones extendidas y atmósferas nocturnas."
-                }
-            ];
-            
             function getArgentinaTime() {
                 const now = new Date();
                 const argentinaOffset = -3 * 60;
@@ -955,25 +926,58 @@
                 });
             }
             
-            function generateCollectionCards() {
-                collectionsGrid.innerHTML = '';
+            function generateNovedades() {
+                const collectionsGrid = document.querySelector('.collections-grid');
+                if (!collectionsGrid) return;
                 
-                collectionsData.forEach(collection => {
+                const novedades = [
+                    { 
+                        name: "Lanzamiento txt", 
+                        desc: "Nueva compilación de sonidos atmosféricos",
+                        date: "DIC 2024"
+                    },
+                    { 
+                        name: "Radio 404 Live", 
+                        desc: "Sesión en vivo desde el estudio principal",
+                        date: "NOV 2024"
+                    },
+                    { 
+                        name: "Floppy Disk Vol.2", 
+                        desc: "Segunda entrega de la serie digital",
+                        date: "OCT 2024"
+                    },
+                    { 
+                        name: "Madrugada Sessions", 
+                        desc: "Grabaciones exclusivas de 2AM a 6AM",
+                        date: "SEP 2024"
+                    },
+                    { 
+                        name: "Telesoft Remixes", 
+                        desc: "Reinterpretaciones del programa matutino",
+                        date: "AGO 2024"
+                    },
+                    { 
+                        name: "Piratas Archive", 
+                        desc: "Material de archivo restaurado digitalmente",
+                        date: "JUL 2024"
+                    }
+                ];
+                
+                collectionsGrid.innerHTML = '';
+                novedades.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'collection-card';
-                    
                     card.innerHTML = `
                         <div class="collection-header">
-                            <div class="collection-name">${collection.name}</div>
+                            <div class="collection-name">${item.name}</div>
                             <div class="collection-meta">
-                                <span>${collection.tracks} tracks</span>
+                                <span>${item.date}</span>
                             </div>
                         </div>
                         <div class="collection-body">
-                            <div class="collection-desc">${collection.description}</div>
+                            <div class="collection-desc">${item.desc}</div>
                         </div>
                     `;
-                    
                     collectionsGrid.appendChild(card);
                 });
             }
@@ -1213,7 +1217,7 @@
             // INICIALIZAR
             updateDisplayInfo();
             generateScheduleCards();
-            generateCollectionCards();
+            generateNovedades();
             loadCurrentPlaylist();
             
             setInterval(checkScheduleChange, 60000);
@@ -1222,5 +1226,6 @@
     </script>
 </body>
 </html>
+
 
 
