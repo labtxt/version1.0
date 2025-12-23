@@ -335,11 +335,12 @@ function generateNovedades() {
     // Inicializar interfaz
     updateCurrentShow();
     generateSchedule();
-    generateCollections();
+    generateNovedades();
     
     // Actualizar cada minuto
     setInterval(updateCurrentShow, 60000);
 });
 
 console.log("📻 Teletext Radio cargado - Transmisión en vivo 24/7");
+
 
