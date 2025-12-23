@@ -362,4 +362,70 @@ body {
     .novedades-section {
         padding: 1.5rem 0.5rem;
     }
+/* === NOVEDADES TXT === */
+.novedades-section {
+    background: rgba(15, 15, 15, 0.92);
+    padding: 40px 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+.novedades-section .section-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.novedades-section .section-title span {
+    color: #00FF37;
+}
+
+.novedades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.novedad-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.novedad-card:hover {
+    border-color: rgba(0, 255, 55, 0.3);
+    transform: translateY(-3px);
+}
+
+.novedad-date {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+    font-family: monospace;
+}
+
+.novedad-name {
+    font-size: 1.2rem;
+    color: #00FF37;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.novedad-desc {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .novedades-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
